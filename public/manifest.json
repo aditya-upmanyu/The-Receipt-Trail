@@ -1,0 +1,20 @@
+{
+  "name": "Your Life, In Receipts",
+  "short_name": "Life Receipts",
+  "description": "Transform your digital receipts into an interactive story",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070B",
+  "theme_color": "#06B6D4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "productivity", "utilities"],
+  "screenshots": []
+}
