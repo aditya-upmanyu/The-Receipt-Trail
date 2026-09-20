@@ -367,7 +367,9 @@ export function deduplicateReceipts(receipts: Receipt[]): Receipt[] {
 }
 
 export function sortReceiptsByDate(receipts: Receipt[]): Receipt[] {
-  return [...receipts].sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Mutate in place to avoid stack overflow with spread on large arrays
+  receipts.sort((a, b) => a.date.getTime() - b.date.getTime());
+  return receipts;
 }
 
 export function normalizeReceipts(receipts: Receipt[]): Receipt[] {

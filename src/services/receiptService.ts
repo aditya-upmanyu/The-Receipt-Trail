@@ -83,7 +83,11 @@ async function loadSpotifyData(): Promise<Receipt[]> {
 
     console.log(`Spotify: ${result.data.length} receipts, ${result.skipped} skipped, ${result.errors.length} errors`);
 
-    return result.data;
+    // Limit to prevent browser crashes (take most recent)
+    const limited = result.data.slice(-20000); // Last 20K entries
+    console.log(`Spotify limited to ${limited.length} receipts`);
+    
+    return limited;
   } catch (error) {
     console.error("Error loading Spotify data:", error);
     return [];
@@ -98,7 +102,11 @@ async function loadHouseholdData(): Promise<Receipt[]> {
 
     console.log(`Household: ${result.data.length} receipts, ${result.skipped} skipped, ${result.errors.length} errors`);
 
-    return result.data;
+    // Limit to prevent browser crashes
+    const limited = result.data.slice(0, 5000); // First 5K entries
+    console.log(`Household limited to ${limited.length} receipts`);
+    
+    return limited;
   } catch (error) {
     console.error("Error loading Household data:", error);
     return [];
