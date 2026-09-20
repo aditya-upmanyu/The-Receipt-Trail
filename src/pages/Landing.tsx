@@ -4,12 +4,11 @@
  */
 
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-interface LandingProps {
-  onEnter: () => void;
-}
+export function Landing() {
+  const navigate = useNavigate();
 
-export function Landing({ onEnter }: LandingProps) {
   // Generate stable particle positions
   const particles = Array.from({ length: 50 }, (_, i) => ({
     id: i,
@@ -85,7 +84,7 @@ export function Landing({ onEnter }: LandingProps) {
 
         <motion.button
           type="button"
-          onClick={onEnter}
+          onClick={() => navigate("/explore")}
           className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-lg font-semibold rounded-lg hover:from-cyan-600 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-cyan-500/50 hover:scale-105"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}

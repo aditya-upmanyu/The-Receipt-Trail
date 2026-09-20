@@ -7,6 +7,7 @@ export const APP_NAME = "Your Life, In Receipts";
 export const ROUTES = {
   HOME: "/",
   EXPLORE: "/explore",
+  TIMELINE: "/timeline",
   STORY: "/story",
   CONNECTIONS: "/connections",
 } as const;
