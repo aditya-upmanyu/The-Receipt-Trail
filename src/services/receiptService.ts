@@ -10,6 +10,7 @@ import {
   parseIndiaTransactionJSON,
   normalizeReceipts,
 } from "../utils/parsing";
+import { errorLogger, ErrorSeverity } from "./errorLogger.service";
 
 // ============================================================================
 // DATA LOADING
@@ -20,39 +21,32 @@ export async function loadAllReceipts(): Promise<Receipt[]> {
 
   try {
     // Load Spotify data
-    console.log('Loading Spotify data...');
     const spotifyData = await loadSpotifyData();
-    console.log(`Loaded ${spotifyData.length} Spotify receipts`);
-    // Use concat or loop instead of spread to avoid stack overflow
     for (const receipt of spotifyData) {
       allReceipts.push(receipt);
     }
 
     // Load Household transactions
-    console.log('Loading Household data...');
     const householdData = await loadHouseholdData();
-    console.log(`Loaded ${householdData.length} Household receipts`);
     for (const receipt of householdData) {
       allReceipts.push(receipt);
     }
 
     // Load India transactions (may skip if too large)
-    console.log('Loading India transaction data...');
     const indiaData = await loadIndiaTransactionData();
-    console.log(`Loaded ${indiaData.length} India receipts`);
     for (const receipt of indiaData) {
       allReceipts.push(receipt);
     }
 
-    console.log(`Total raw receipts: ${allReceipts.length}`);
-    
     // Normalize and deduplicate - do this in chunks to avoid stack overflow
     const normalized = normalizeReceiptsChunked(allReceipts);
-    console.log(`Normalized to ${normalized.length} receipts`);
 
     return normalized;
   } catch (error) {
-    console.error("Error loading receipts:", error);
+    errorLogger.logError(error as Error, ErrorSeverity.CRITICAL, {
+      operation: "loadAllReceipts",
+      receiptCount: allReceipts.length,
+    });
     const errorMessage = error instanceof Error ? error.message : "Failed to load data";
     throw new Error(`Failed to load receipt data: ${errorMessage}`, { cause: error });
   }
@@ -88,15 +82,14 @@ async function loadSpotifyData(): Promise<Receipt[]> {
     const text = await response.text();
     const result = parseSpotifyCSV(text);
 
-    console.log(`Spotify: ${result.data.length} receipts, ${result.skipped} skipped, ${result.errors.length} errors`);
-
     // Limit to prevent browser crashes (take most recent)
     const limited = result.data.slice(-20000); // Last 20K entries
-    console.log(`Spotify limited to ${limited.length} receipts`);
     
     return limited;
   } catch (error) {
-    console.error("Error loading Spotify data:", error);
+    errorLogger.logError(error as Error, ErrorSeverity.MEDIUM, {
+      operation: "loadSpotifyData",
+    });
     return [];
   }
 }
@@ -107,15 +100,14 @@ async function loadHouseholdData(): Promise<Receipt[]> {
     const text = await response.text();
     const result = parseHouseholdTransactionsCSV(text);
 
-    console.log(`Household: ${result.data.length} receipts, ${result.skipped} skipped, ${result.errors.length} errors`);
-
     // Limit to prevent browser crashes
     const limited = result.data.slice(0, 5000); // First 5K entries
-    console.log(`Household limited to ${limited.length} receipts`);
     
     return limited;
   } catch (error) {
-    console.error("Error loading Household data:", error);
+    errorLogger.logError(error as Error, ErrorSeverity.MEDIUM, {
+      operation: "loadHouseholdData",
+    });
     return [];
   }
 }
@@ -128,23 +120,24 @@ async function loadIndiaTransactionData(): Promise<Receipt[]> {
     const contentLength = response.headers.get('content-length');
     const fileSizeInMB = contentLength ? parseInt(contentLength) / (1024 * 1024) : 0;
     
-    console.log(`India dataset size: ${fileSizeInMB.toFixed(2)} MB`);
-    
     // For very large files, limit the data
     if (fileSizeInMB > 50) {
-      console.warn('Large dataset detected, loading subset...');
-      // Return empty for now to avoid crash - we'll load smaller dataset
+      errorLogger.logError("Large dataset detected", ErrorSeverity.LOW, {
+        operation: "loadIndiaTransactionData",
+        fileSizeMB: fileSizeInMB,
+      });
+      // Return empty for now to avoid crash
       return [];
     }
     
     const text = await response.text();
     const result = parseIndiaTransactionJSON(text);
 
-    console.log(`India: ${result.data.length} receipts, ${result.skipped} skipped, ${result.errors.length} errors`);
-
     return result.data;
   } catch (error) {
-    console.error("Error loading India transaction data:", error);
+    errorLogger.logError(error as Error, ErrorSeverity.MEDIUM, {
+      operation: "loadIndiaTransactionData",
+    });
     return [];
   }
 }

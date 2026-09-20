@@ -17,8 +17,8 @@ export function useFavorites() {
           return new Set(parsed);
         }
       }
-    } catch (e) {
-      console.warn("Failed to load favorites from localStorage:", e);
+    } catch {
+      // Failed to load favorites from localStorage
     }
     return new Set<string>();
   });
@@ -27,8 +27,8 @@ export function useFavorites() {
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(Array.from(favoriteIds)));
-    } catch (e) {
-      console.warn("Failed to persist favorites to localStorage:", e);
+    } catch {
+      // Failed to persist favorites to localStorage
     }
   }, [favoriteIds]);
 

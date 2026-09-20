@@ -27,7 +27,6 @@ class PerformanceService {
   endMeasure(name: string, metadata?: Record<string, unknown>): number {
     const startTime = this.marks.get(name);
     if (!startTime) {
-      console.warn(`No start mark found for: ${name}`);
       return 0;
     }
 
@@ -42,11 +41,6 @@ class PerformanceService {
     };
 
     this.metrics.push(metric);
-
-    // Log slow operations
-    if (duration > 1000) {
-      console.warn(`Slow operation detected: ${name} took ${duration.toFixed(2)}ms`);
-    }
 
     return duration;
   }
@@ -167,7 +161,11 @@ class PerformanceService {
       const lcpObserver = new PerformanceObserver((list) => {
         const entries = list.getEntries();
         const lastEntry = entries[entries.length - 1] as PerformanceEntry & { renderTime?: number };
-        console.log("[LCP]", lastEntry.startTime || lastEntry.renderTime);
+        this.metrics.push({
+          name: "LCP",
+          duration: lastEntry.startTime || lastEntry.renderTime || 0,
+          timestamp: new Date(),
+        });
       });
       lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
 
@@ -176,7 +174,11 @@ class PerformanceService {
         const entries = list.getEntries();
         entries.forEach((entry) => {
           const fidEntry = entry as PerformanceEventTiming;
-          console.log("[FID]", fidEntry.processingStart - fidEntry.startTime);
+          this.metrics.push({
+            name: "FID",
+            duration: fidEntry.processingStart - fidEntry.startTime,
+            timestamp: new Date(),
+          });
         });
       });
       fidObserver.observe({ entryTypes: ["first-input"] });
@@ -191,11 +193,15 @@ class PerformanceService {
             clsScore += layoutShift.value || 0;
           }
         });
-        console.log("[CLS]", clsScore);
+        this.metrics.push({
+          name: "CLS",
+          duration: clsScore,
+          timestamp: new Date(),
+        });
       });
       clsObserver.observe({ entryTypes: ["layout-shift"] });
-    } catch (error) {
-      console.warn("Web Vitals monitoring not supported", error);
+    } catch {
+      // Web Vitals monitoring not supported
     }
   }
 }

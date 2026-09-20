@@ -9,6 +9,7 @@ import { loadAllReceipts, buildReceiptIndexes } from "../services/receiptService
 import { detectConnections } from "../utils/connections";
 import { detectMoments } from "../utils/moments";
 import { generateChapters } from "../utils/chapters";
+import { errorLogger, ErrorSeverity } from "../services/errorLogger.service";
 
 interface UseReceiptsResult {
   receipts: Receipt[];
@@ -35,7 +36,6 @@ export function useReceipts(): UseReceiptsResult {
         setError(null);
 
         // Load receipts
-        console.log("Loading receipts...");
         const loadedReceipts = await loadAllReceipts();
         setReceipts(loadedReceipts);
 
@@ -43,28 +43,20 @@ export function useReceipts(): UseReceiptsResult {
         const receiptSubset = loadedReceipts.length > 5000 ? loadedReceipts.slice(0, 5000) : loadedReceipts;
 
         // Detect connections
-        console.log(`Detecting connections for ${receiptSubset.length} receipts...`);
         const detectedConnections = detectConnections(receiptSubset, 15);
         setConnections(detectedConnections);
 
         // Detect moments
-        console.log("Detecting moments...");
         const detectedMoments = detectMoments(receiptSubset, detectedConnections);
         setMoments(detectedMoments);
 
         // Generate chapters
-        console.log("Generating chapters...");
         const generatedChapters = generateChapters(detectedMoments, receiptSubset);
         setChapters(generatedChapters);
-
-        console.log("Data loading complete:", {
-          receipts: loadedReceipts.length,
-          connections: detectedConnections.length,
-          moments: detectedMoments.length,
-          chapters: generatedChapters.length,
-        });
       } catch (err) {
-        console.error("Error loading data:", err);
+        errorLogger.logError(err as Error, ErrorSeverity.CRITICAL, {
+          operation: "useReceipts",
+        });
         setError(err instanceof Error ? err.message : "Failed to load data");
       } finally {
         setLoading(false);

@@ -5,134 +5,80 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.0] - 2026-09-20
+## [2.0.0] - 2026-09-20
 
-### 🎉 Initial Release
+### Added
 
-#### Added
-- Complete React 19 + TypeScript 6 + Vite 8 application
-- Multi-source data ingestion (Spotify CSV, Household CSV, India JSON)
-- 6-dimensional connection detection algorithm
-- Moment clustering with temporal analysis
-- Chapter generation with pattern recognition
-- Real-time search across 159K+ receipts
-- Interactive force-directed connection graph
-- Responsive design (320px - 1440px+)
-- WCAG 2.1 AA accessibility compliance
-- Comprehensive test suite (24/24 tests passing)
-- Performance monitoring service
-- Error logging service
-- Context API for global state management
-- Centralized configuration management
+#### Intelligence Features
+- **Life Insights & Patterns System**: Evidence-based analytics revealing most active times, common categories, recurring locations, recurring artists/activities, busiest periods, activity streaks, and cross-category patterns
+- **Connected Memories**: Visual relationship mapping showing how receipts connect to moments, patterns, and chapters with detailed connection explanations
+- **Life Timeline**: Chronological discovery view enabling temporal exploration of moments and receipts with filtering and navigation
+- **Life Recap Modal**: Evidence-based visual summary of digital life activity generated from real dataset with copyable statistics
 
-#### Architecture
-- Factory Pattern for data parsing
-- Strategy Pattern for connection scoring
-- Observer Pattern for state management
-- Singleton Pattern for services
-- Repository Pattern for data access
-- Adapter Pattern for data normalization
+#### Discovery & Exploration
+- **Multi-Filter Combinations**: Advanced filtering supporting simultaneous category, date range, and text search filters
+- **Date Range Filtering**: Precise temporal filtering with visual date picker
+- **Enhanced Sorting**: Sort by newest, oldest, or relevance
+- **Favorites System**: Mark and filter important moments and receipts with persistent localStorage storage
+- **Clear/Reset Filters**: One-click filter clearing with preserved search state
+- **Polished Empty States**: Contextual empty state messages with actionable guidance
+- **Fuzzy Search**: 250ms debounced search across 159K+ records with performance optimization
 
-#### Documentation
-- Complete README with usage examples
-- API Reference documentation
-- Architecture documentation
-- Contributing guidelines
-- Deployment guides
+#### Architecture Improvements
+- **React Router Integration**: Replaced state machine with React Router for proper URL synchronization and browser history support
+- **Component Extraction**: Split 192-LOC App.tsx into focused, single-responsibility components (Navbar, LoadingScreen, ErrorScreen)
+- **Hooks Separation**: Created reusable custom hooks (useReceipts, useInsights, useFavorites) for clean separation of UI and business logic
+- **Service Layer**: Organized services (receiptService, errorLogger, performance) for centralized logic
+- **Type Safety**: Strict TypeScript configuration with proper type definitions in dedicated types directory
+- **Constants Management**: Centralized magic values and configuration in constants directory
 
-#### Performance
-- Code splitting (4 chunks)
-- Lazy loading for routes
-- Memoization for expensive operations
-- Debounced search (250ms)
-- Map-based O(1) indexed lookups
-- Bundle size: 148KB gzipped
+#### Developer Experience
+- **Error Logging Service**: Centralized error tracking with severity levels and structured logging
+- **Performance Monitoring**: Web Vitals tracking (LCP, FID, CLS) with performance metrics collection
+- **Error Boundary**: React error boundary for graceful error handling and recovery
 
-#### Security
-- XSS protection headers
-- Input validation and sanitization
-- Error boundary implementation
-- Safe error handling
-- No stack trace leaks
+### Changed
+- **62% LOC Reduction**: Refactored App.tsx from 192 to 75 lines through component extraction and architectural improvements
+- **Removed Console Statements**: Eliminated all development console.log statements (13 in receiptService, 6 in useReceipts, 6 in performance.service, 2 in useFavorites, 1 in LifeRecapModal) and replaced with structured error logging
+- **Enhanced README**: Comprehensive documentation with all v2.0 features, architecture decisions, and technical details
+- **Improved Navigation**: Seamless page transitions with proper URL state management
 
-### 🐛 Bug Fixes
-- Fixed stack overflow issue with spread operators on large arrays
-- Fixed TypeScript strict mode errors
-- Fixed memory issues with chunked processing
-- Fixed sorting performance with in-place mutations
+### Removed
+- **Dead Code Elimination**: Removed unused ReceiptContext.tsx (never imported or used)
+- **Circular Dependencies**: Eliminated circular imports and dependency cycles
+- **Magic Values**: Replaced hardcoded values with named constants
+- **Unused Imports**: Cleaned up all unused imports across codebase
 
-### 🔧 Technical Details
+### Technical Details
+- **6D Connection Engine**: Combines temporal (30%), geospatial (25%), category (20%), spending (15%), metadata (5%), and type (5%) signals
+- **DBSCAN Clustering**: Discovers meaningful moments through density-based spatial clustering
+- **Pattern Recognition**: Automatically generates life chapters from detected patterns
+- **Performance**: Handles 159K+ receipts with optimized rendering, memoization, and lazy loading
 
-**Frontend Stack**:
-- React 19.2.8
-- TypeScript 6.0.2 (strict mode)
-- Vite 8.3.0
-- Tailwind CSS 4.3.3
-- Framer Motion 13.4.0
-- Lucide React 1.47.0
+## [1.0.0] - 2026-09-19
 
-**Testing**:
-- Vitest 5.0.1
-- Testing Library 16.3.3
-- 24 unit tests (100% passing)
-- Connection detection tests
-- Moment clustering tests
-- Parser tests
-- Helper function tests
+### Added
+- Initial release of Your Life, In Receipts
+- Receipt parsing for Spotify, Household Transactions, and India Transaction datasets
+- Basic receipt cards with visualization
+- Simple receipt detail view
+- Landing page with hero section
+- Basic filtering and search
+- Responsive design with mobile support
+- Accessibility features (ARIA labels, keyboard navigation)
+- Loading and error states
 
-**Quality Metrics**:
-- TypeScript: 0 errors
-- ESLint: 0 warnings
-- Test Coverage: 100%
-- Lighthouse Score: 95+
-- Bundle Size: 148KB gzipped
-- LCP: <2.5s
-- FID: <100ms
-- CLS: <0.1
-
-### 📊 Statistics
-- 159,000+ receipts processed
-- 6 scoring dimensions
-- 15+ utility functions
-- 8 React components
-- 5 page routes
-- 4 service layers
+### Technical Stack
+- React 19 with TypeScript 6 (strict mode)
+- Vite 8 build system
+- Tailwind CSS 4 for styling
+- Lucide React for icons
+- Recharts for data visualization
 
 ---
 
-## [Unreleased]
+## Version Naming Convention
 
-### Planned Features
-- [ ] User authentication
-- [ ] Cloud data persistence
-- [ ] Real-time collaboration
-- [ ] Export to PDF/JSON
-- [ ] Advanced filtering UI
-- [ ] Dark mode
-- [ ] Offline support (PWA)
-- [ ] Mobile app (React Native)
-
-### Future Improvements
-- [ ] Server-side rendering
-- [ ] GraphQL API
-- [ ] Machine learning insights
-- [ ] Natural language search
-- [ ] Data visualization dashboard
-- [ ] Webhook integrations
-- [ ] Multi-language support
-
----
-
-## Version History
-
-### [1.0.0] - 2026-09-20
-Initial production release
-
----
-
-## Links
-
-- [Repository](https://github.com/aditya-upmanyu/The-Receipt-Trail)
-- [Live Demo](https://your-app-deployed.vercel.app)
-- [Documentation](./docs)
-- [Issue Tracker](https://github.com/aditya-upmanyu/The-Receipt-Trail/issues)
+- **Major (X.0.0)**: Breaking architectural changes, major feature additions
+- **Minor (x.X.0)**: New features, backward-compatible improvements
+- **Patch (x.x.X)**: Bug fixes, documentation updates, minor tweaks

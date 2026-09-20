@@ -1,7 +1,8 @@
 {
   "name": "web-rush",
+  "version": "2.0.0",
+  "description": "AI-powered life discovery engine transforming 159K+ receipts into interactive narrative journey with intelligent insights, temporal patterns, and connected memories. Built with React 19, TypeScript 6 strict, Vite 8, and Tailwind 4.",
   "private": true,
-  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

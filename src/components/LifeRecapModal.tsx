@@ -78,8 +78,8 @@ export function LifeRecapModal({ receipts, moments, isOpen, onClose }: LifeRecap
       await navigator.clipboard.writeText(summaryText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
-    } catch (e) {
-      console.warn("Failed to copy recap:", e);
+    } catch {
+      console.warn("Failed to copy recap");
     }
   };
 
