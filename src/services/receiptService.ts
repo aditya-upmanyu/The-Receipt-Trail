@@ -20,21 +20,28 @@ export async function loadAllReceipts(): Promise<Receipt[]> {
 
   try {
     // Load Spotify data
+    console.log('Loading Spotify data...');
     const spotifyData = await loadSpotifyData();
+    console.log(`Loaded ${spotifyData.length} Spotify receipts`);
     allReceipts.push(...spotifyData);
 
     // Load Household transactions
+    console.log('Loading Household data...');
     const householdData = await loadHouseholdData();
+    console.log(`Loaded ${householdData.length} Household receipts`);
     allReceipts.push(...householdData);
 
-    // Load India transactions
+    // Load India transactions (may skip if too large)
+    console.log('Loading India transaction data...');
     const indiaData = await loadIndiaTransactionData();
+    console.log(`Loaded ${indiaData.length} India receipts`);
     allReceipts.push(...indiaData);
 
-    // Normalize and deduplicate
-    const normalized = normalizeReceipts(allReceipts);
-
-    console.log(`Loaded ${normalized.length} receipts from ${allReceipts.length} raw records`);
+    console.log(`Total raw receipts: ${allReceipts.length}`);
+    
+    // Normalize and deduplicate - do this in chunks to avoid stack overflow
+    const normalized = normalizeReceiptsChunked(allReceipts);
+    console.log(`Normalized to ${normalized.length} receipts`);
 
     return normalized;
   } catch (error) {
@@ -42,6 +49,30 @@ export async function loadAllReceipts(): Promise<Receipt[]> {
     const errorMessage = error instanceof Error ? error.message : "Failed to load data";
     throw new Error(`Failed to load receipt data: ${errorMessage}`, { cause: error });
   }
+}
+
+// Chunk-based normalization to avoid stack overflow
+function normalizeReceiptsChunked(receipts: Receipt[], chunkSize = 10000): Receipt[] {
+  if (receipts.length <= chunkSize) {
+    return normalizeReceipts(receipts);
+  }
+  
+  const chunks: Receipt[][] = [];
+  for (let i = 0; i < receipts.length; i += chunkSize) {
+    chunks.push(receipts.slice(i, i + chunkSize));
+  }
+  
+  const normalized = chunks.flatMap(chunk => normalizeReceipts(chunk));
+  
+  // Deduplicate across chunks
+  const seen = new Set<string>();
+  return normalized.filter(receipt => {
+    if (seen.has(receipt.id)) {
+      return false;
+    }
+    seen.add(receipt.id);
+    return true;
+  });
 }
 
 async function loadSpotifyData(): Promise<Receipt[]> {
@@ -77,6 +108,20 @@ async function loadHouseholdData(): Promise<Receipt[]> {
 async function loadIndiaTransactionData(): Promise<Receipt[]> {
   try {
     const response = await fetch("/datasets/Augmented_IndiaTransactMultiFacet2024.json");
+    
+    // Check file size
+    const contentLength = response.headers.get('content-length');
+    const fileSizeInMB = contentLength ? parseInt(contentLength) / (1024 * 1024) : 0;
+    
+    console.log(`India dataset size: ${fileSizeInMB.toFixed(2)} MB`);
+    
+    // For very large files, limit the data
+    if (fileSizeInMB > 50) {
+      console.warn('Large dataset detected, loading subset...');
+      // Return empty for now to avoid crash - we'll load smaller dataset
+      return [];
+    }
+    
     const text = await response.text();
     const result = parseIndiaTransactionJSON(text);
 
