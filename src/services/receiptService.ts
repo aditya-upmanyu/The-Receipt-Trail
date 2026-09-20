@@ -23,19 +23,26 @@ export async function loadAllReceipts(): Promise<Receipt[]> {
     console.log('Loading Spotify data...');
     const spotifyData = await loadSpotifyData();
     console.log(`Loaded ${spotifyData.length} Spotify receipts`);
-    allReceipts.push(...spotifyData);
+    // Use concat or loop instead of spread to avoid stack overflow
+    for (const receipt of spotifyData) {
+      allReceipts.push(receipt);
+    }
 
     // Load Household transactions
     console.log('Loading Household data...');
     const householdData = await loadHouseholdData();
     console.log(`Loaded ${householdData.length} Household receipts`);
-    allReceipts.push(...householdData);
+    for (const receipt of householdData) {
+      allReceipts.push(receipt);
+    }
 
     // Load India transactions (may skip if too large)
     console.log('Loading India transaction data...');
     const indiaData = await loadIndiaTransactionData();
     console.log(`Loaded ${indiaData.length} India receipts`);
-    allReceipts.push(...indiaData);
+    for (const receipt of indiaData) {
+      allReceipts.push(receipt);
+    }
 
     console.log(`Total raw receipts: ${allReceipts.length}`);
     

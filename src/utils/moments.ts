@@ -25,8 +25,9 @@ export function detectMoments(receipts: Receipt[], connections: Connection[]): L
   // Build connection index for quick lookups
   const connectionIndex = buildConnectionIndex(connections);
 
-  // Sort receipts by date
-  const sortedReceipts = [...receipts].sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Sort receipts by date (mutate in place to avoid spread operator stack overflow)
+  receipts.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const sortedReceipts = receipts;
 
   for (let i = 0; i < sortedReceipts.length; i++) {
     const receipt = sortedReceipts[i];
@@ -112,7 +113,9 @@ function buildConnectionIndex(connections: Connection[]): Map<string, Connection
 // ============================================================================
 
 function createMoment(receipts: Receipt[], connectionIndex: Map<string, Connection[]>): LifeMoment {
-  const sortedReceipts = [...receipts].sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Sort in place to avoid spread operator stack overflow
+  receipts.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const sortedReceipts = receipts;
   const startTime = sortedReceipts[0].date;
   const endTime = sortedReceipts[sortedReceipts.length - 1].date;
 

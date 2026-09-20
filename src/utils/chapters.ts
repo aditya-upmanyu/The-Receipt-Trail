@@ -19,7 +19,9 @@ export function generateChapters(moments: LifeMoment[], allReceipts: Receipt[]):
   if (moments.length < CHAPTER_MIN_MOMENTS) return [];
 
   const chapters: Chapter[] = [];
-  const sortedMoments = [...moments].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+  // Sort in place to avoid spread operator stack overflow
+  moments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+  const sortedMoments = moments;
 
   let currentChapter: LifeMoment[] = [];
   let chapterStart = sortedMoments[0].startTime;
@@ -51,7 +53,9 @@ export function generateChapters(moments: LifeMoment[], allReceipts: Receipt[]):
 }
 
 function createChapter(moments: LifeMoment[], chapterNumber: number, allReceipts: Receipt[]): Chapter {
-  const sortedMoments = [...moments].sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+  // Sort in place to avoid spread operator stack overflow
+  moments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+  const sortedMoments = moments;
   const startDate = sortedMoments[0].startTime;
   const endDate = sortedMoments[sortedMoments.length - 1].endTime;
 
@@ -192,7 +196,9 @@ function detectRecurrence(receipts: Receipt[]): Pattern | null {
 }
 
 function detectActivityShift(receipts: Receipt[]): Pattern | null {
-  const sorted = [...receipts].sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Sort in place to avoid spread operator stack overflow
+  receipts.sort((a, b) => a.date.getTime() - b.date.getTime());
+  const sorted = receipts;
   const midpoint = Math.floor(sorted.length / 2);
 
   const firstHalf = sorted.slice(0, midpoint);
