@@ -1,9 +1,7 @@
 /**
- * Chapter Generation Engine
- * Groups moments into larger narrative chapters based on:
- * - Time periods
- * - Activity density
- * - Pattern detection
+ * Chapter Generation Engine — Synthesizes clustered moments into coherent macro-narrative chapters.
+ * Inputs: Array of detected LifeMoments and corresponding source receipts.
+ * Outputs: Chronological Chapter array with dominant activities, activity levels, patterns, and narrative summaries.
  */
 
 import type { Chapter, LifeMoment, Receipt, Pattern, ReceiptType } from "../types/index";

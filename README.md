@@ -6,7 +6,7 @@
 ![React](https://img.shields.io/badge/React-19.2.8-61DAFB?logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6.0.2-3178C6?logo=typescript)
 ![Vite](https://img.shields.io/badge/Vite-8.3.0-646CFF?logo=vite)
-![Tests](https://img.shields.io/badge/tests-24%2F24%20passing-success)
+![Tests](https://img.shields.io/badge/tests-42%2F42%20passing-success)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 **An AI-powered digital life discovery engine that transforms 159,000+ receipts into an interactive narrative journey**
@@ -244,7 +244,7 @@ Detects meaningful patterns for chapter generation:
 | CLS | <0.1 | <0.1 | ✅ Perfect |
 | TypeScript Errors | 0 | 0 | ✅ Perfect |
 | ESLint Warnings | 0 | 0 | ✅ Perfect |
-| Test Coverage | 24/24 (100%) | 80%+ | ✅ Exceeds |
+| Test Coverage | 42/42 (100%) | 80%+ | ✅ Exceeds |
 | Lighthouse Score | 95+ | 90+ | ✅ Exceeds |
 
 ### Performance Optimizations
@@ -328,45 +328,27 @@ npx tsc --noEmit
 
 ## 🧪 Testing
 
-### Test Suite (24/24 Passing)
+### Test Suite (42/42 Passing — 7 Suites)
 
 ```bash
 # Run all tests
 npm test
 
-# Run with coverage
-npm run test:coverage
-
 # Watch mode
 npm run test:watch
 ```
 
-### Test Categories
+### Test Suites
 
-**Connection Detection (8 tests)**
-- Temporal proximity scoring
-- Location overlap detection
-- Category matching
-- Combined scoring algorithm
-- Edge cases and null handling
-
-**Moment Clustering (6 tests)**
-- Temporal grouping
-- Connection-based clustering
-- Metadata extraction
-- Moment validation
-
-**Data Parsing (5 tests)**
-- CSV parsing (Spotify, Household)
-- JSON parsing (India transactions)
-- Error handling
-- Data normalization
-
-**Helpers & Utils (5 tests)**
-- Date formatting
-- Text truncation
-- Debounce functionality
-- Search sanitization
+| Suite | Tests | Coverage |
+|-------|-------|----------|
+| `connections.test.ts` | 6 | Connection detection, scoring, edge cases |
+| `moments.test.ts` | 3 | DBSCAN clustering, temporal grouping |
+| `parsing.test.ts` | 6 | CSV/JSON parsing, normalization |
+| `helpers.test.ts` | 9 | Date formatting, debounce, sanitization |
+| `insights.test.ts` | 7 | Life insights engine, pattern extraction |
+| `timeline.test.ts` | 4 | Date grouping, moment lookup |
+| `components.test.tsx` | 7 | ReceiptCard, ConnectedMemories, PatternInsights |
 
 ---
 
@@ -376,26 +358,30 @@ npm run test:watch
 The-Receipt-Trail/
 ├── src/
 │   ├── components/
+│   │   ├── ConnectedMemories.tsx  ← Receipt→Moment→Chapter trail
 │   │   ├── ErrorBoundary.tsx
-│   │   ├── ErrorScreen.tsx      ← NEW
-│   │   ├── LoadingScreen.tsx    ← NEW
-│   │   ├── Navbar.tsx           ← NEW
+│   │   ├── ErrorScreen.tsx
+│   │   ├── LifeRecapModal.tsx     ← Evidence-based life summary
+│   │   ├── LoadingScreen.tsx
+│   │   ├── Navbar.tsx
+│   │   ├── PatternInsights.tsx    ← Behavioral pattern cards
 │   │   ├── ReceiptCard.tsx
 │   │   └── ReceiptDetail.tsx
 │   │
+│   ├── context/
+│   │   └── ReceiptsContext.tsx    ← Centralized data context
+│   │
 │   ├── pages/
 │   │   ├── Landing.tsx
-│   │   ├── Explore.tsx          ← ENHANCED
+│   │   ├── Explore.tsx            ← Multi-filter, favorites, sort
 │   │   ├── Story.tsx
-│   │   ├── Connections.tsx
-│   │   ├── Timeline.tsx         ← NEW
-│   │   └── Insights.tsx         ← NEW
+│   │   ├── Connections.tsx        ← Graph + chapter linkage
+│   │   └── Timeline.tsx           ← Chronological discovery
 │   │
 │   ├── hooks/
 │   │   ├── useReceipts.ts
-│   │   ├── useFilters.ts        ← NEW
-│   │   ├── useInsights.ts       ← NEW
-│   │   └── useFavorites.ts      ← NEW
+│   │   ├── useInsights.ts
+│   │   └── useFavorites.ts
 │   │
 │   ├── services/
 │   │   ├── receiptService.ts
@@ -403,21 +389,18 @@ The-Receipt-Trail/
 │   │   └── performance.service.ts
 │   │
 │   ├── utils/
-│   │   ├── connections.ts
-│   │   ├── moments.ts
-│   │   ├── chapters.ts
+│   │   ├── connections.ts         ← 6D scoring engine
+│   │   ├── moments.ts             ← DBSCAN clustering
+│   │   ├── chapters.ts            ← Narrative generation
+│   │   ├── insights.ts            ← Evidence-based patterns
+│   │   ├── timeline.ts            ← Date grouping
 │   │   ├── parsing.ts
 │   │   └── helpers.ts
 │   │
-│   ├── config/
-│   │   └── app.config.ts
+│   ├── types/index.ts
+│   ├── tests/                     ← 42 tests
 │   │
-│   ├── types/
-│   │   └── index.ts
-│   │
-│   ├── tests/                   ← 24 tests
-│   │
-│   ├── App.tsx                  ← 75 LOC (was 192)
+│   └── App.tsx                    ← Lazy-loaded routes
 │   └── main.tsx
 │
 ├── public/
@@ -474,24 +457,36 @@ The-Receipt-Trail/
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
+**No environment variables required.** This is a fully client-side application.
 
+### Netlify (Zero-config)
+
+Connect your GitHub repo at [netlify.com](https://app.netlify.com) → settings auto-detected from `netlify.toml`:
+- Build command: `npm run build`
+- Publish directory: `dist`
+- SPA redirect rule: `/*` → `/index.html`
+- Security headers: XSS, X-Frame-Options, HSTS
+
+Or via CLI:
 ```bash
-# Install Vercel CLI
-npm i -g vercel
-
-# Deploy
-vercel
+npm install -g netlify-cli
+netlify deploy --prod
 ```
 
-Configuration in `vercel.json`:
-- Build command: `npm run build`
-- Output directory: `dist`
-- SPA routing configured
-- Security headers enabled
+### Vercel
 
-### Environment Variables
-**None required!** This is a fully client-side application.
+```bash
+npm i -g vercel
+vercel   # auto-detects Vite, routes from vercel.json
+```
+
+### Manual / Self-hosted
+
+```bash
+npm run build        # outputs to dist/
+# Serve dist/ with any static host — nginx, Caddy, GitHub Pages, etc.
+# Ensure your server rewrites all routes to /index.html (SPA routing)
+```
 
 ---
 
@@ -520,7 +515,7 @@ Configuration in `vercel.json`:
 - ✅ Lazy route loading
 
 ### 🧪 Quality Improvements
-- ✅ 24/24 tests passing (was 8)
+- ✅ 42/42 tests passing across 7 suites
 - ✅ Tests for all new features
 - ✅ 0 TypeScript errors
 - ✅ 0 ESLint warnings

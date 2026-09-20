@@ -1,7 +1,7 @@
 /**
- * Life Insights Engine
- * Pure, evidence-based pattern extraction from real receipt and moment data.
- * No fabricated insights or psychological claims.
+ * Life Insights Engine — Extracts verifiable behavioral patterns and statistical distributions from real receipt logs.
+ * Inputs: Array of normalized receipts and clustered LifeMoments.
+ * Outputs: LifeInsightsReport detailing peak hours, category dominance, streaks, recurring entities, and cross-category patterns.
  */
 
 import type { Receipt, LifeMoment, ReceiptType } from "../types/index";

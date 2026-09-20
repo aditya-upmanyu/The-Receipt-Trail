@@ -1,11 +1,7 @@
 /**
- * Connection Engine
- * Detects meaningful relationships between receipts using:
- * - Temporal proximity
- * - Location similarity
- * - Semantic/thematic connections
- * - Category chains
- * - Recurrence patterns
+ * Connection Engine — Computes 6-dimensional weighted relationship graph between digital receipts.
+ * Inputs: Array of normalized receipts across music, places, purchases, and events.
+ * Outputs: Array of Connection objects scored (0-100) across temporal, location, and semantic dimensions.
  */
 
 import type { Receipt, Connection, ConnectionType } from "../types/index";

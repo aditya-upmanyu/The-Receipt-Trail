@@ -80,17 +80,19 @@
 - **performance.service.ts** - Performance monitoring
 
 ### Context Layer (`src/context/`)
-- **ReceiptContext.tsx** - Global state provider
-  - Receipts, connections, moments, chapters
-  - Helper methods for data access
-  - Loading and error states
+- **ReceiptsContext.tsx** — Centralized React Context built on `useReceipts`.
+  Provides `receipts`, `connections`, `moments`, `chapters`, `indexes`, `loading`, `error`
+  to all pages via `useReceiptsContext()`, eliminating prop-drilling.
+  The context provider wraps `AppRoutes` in `App.tsx`.
 
 ### Utility Layer (`src/utils/`)
-- **parsing.ts** - Data parsing and normalization
-- **connections.ts** - Connection detection algorithm
-- **moments.ts** - Moment clustering algorithm
-- **chapters.ts** - Chapter generation with pattern detection
-- **helpers.ts** - Common utilities (date, format, debounce)
+- **parsing.ts** — Multi-format CSV/JSON data parsing and normalization
+- **connections.ts** — 6-dimensional weighted connection scoring engine
+- **moments.ts** — DBSCAN-inspired temporal and relational clustering
+- **chapters.ts** — Pattern-based narrative chapter generation
+- **insights.ts** — Evidence-based behavioral pattern extraction (streaks, peak hours, recurrence)
+- **timeline.ts** — Date-grouped chronological view utilities
+- **helpers.ts** — Common utilities (date formatting, debounce, text helpers)
 
 ## Data Flow
 
@@ -167,7 +169,7 @@ User Input → Debounced (250ms) → searchReceipts()
 
 ## Testing Strategy
 
-### Unit Tests (24 tests, 100% passing)
+### Unit Tests (42 tests / 7 suites, 100% passing)
 - **Connection Detection** - 8 tests
   - Temporal proximity scoring
   - Location overlap detection

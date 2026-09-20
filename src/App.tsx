@@ -89,7 +89,7 @@ function AppRoutes() {
               <Navbar onOpenRecap={() => setShowRecap(true)} />
               <main>
                 <Suspense fallback={<LoadingScreen />}>
-                  <Connections moments={moments} />
+                  <Connections moments={moments} receipts={receipts} chapters={chapters} />
                 </Suspense>
               </main>
             </div>

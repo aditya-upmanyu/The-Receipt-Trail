@@ -1,9 +1,7 @@
 /**
- * Moment Detection Engine
- * Groups related receipts into meaningful life moments based on:
- * - Temporal clustering
- * - Connection strength
- * - Location proximity
+ * Moment Detection Engine — DBSCAN-style temporal and relational clustering algorithm.
+ * Inputs: Chronologically sorted receipts and discovered connection graph edges.
+ * Outputs: Discrete LifeMoment clusters with temporal spans, participating receipts, and verifiable evidence.
  */
 
 import type { Receipt, LifeMoment, Connection, Location } from "../types/index";
